@@ -1,0 +1,73 @@
+# OS junk
+.DS_Store
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+
+# Architectures
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# VS / VS for Mac
+.vs/
+*.user
+*.suo
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+nunit-*.xml
+TestResult.xml
+*.VisualState.xml
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Lock/restore artifacts (older formats)
+project.lock.json
+project.fragment.lock.json
+
+# Logs & temp
+*.log
+*.tmp
+
+# Azure publish
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+PublishScripts/
+
+# Node (if present in web projects)
+node_modules/
+
+# Others commonly generated
+AppPackages/
+BundleArtifacts/
+publish/
+FakesAssemblies/
+_MigrationBackup/
+MigrationBackup/
+.ionide/
+.fake/
