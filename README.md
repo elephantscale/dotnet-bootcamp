@@ -4,7 +4,7 @@ A comprehensive hands-on learning experience covering fundamental .NET concepts 
 
 ## Prerequisites
 - Visual Studio 2022 or Visual Studio Code with C# extension
-- .NET 8.0 SDK or later
+- .NET 9.0 SDK
 - Git (for source control exercises)
 
 ## Lab Structure
