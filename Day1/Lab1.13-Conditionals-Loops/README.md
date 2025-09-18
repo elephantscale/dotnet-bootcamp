@@ -176,6 +176,7 @@ namespace Lab1_13
     }
 }
 
+
 ```
 
 ### Task 2: Loop Structures
@@ -373,6 +374,7 @@ namespace Lab1_13
     }
 }
 
+
 ```
 
 ### Task 3: Practical Examples
@@ -538,6 +540,7 @@ namespace Lab1_13
         }
     }
 }
+
 
 ```
 
