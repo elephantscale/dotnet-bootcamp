@@ -27,6 +27,8 @@ Learn break, continue, and nested structures.
 ### Task 1: Conditional Statements
 Create `ConditionalStatements.cs`:
 ```csharp
+using System;
+
 namespace Lab1_13
 {
     public static class ConditionalStatements
@@ -38,13 +40,13 @@ namespace Lab1_13
             int temperature = 75;
             Console.WriteLine($"Temperature: {temperature}°F");
 
-            // Simple if statement
+            // Simple if
             if (temperature > 80)
             {
                 Console.WriteLine("It's hot outside!");
             }
 
-            // If-else statement
+            // If-else
             if (temperature > 80)
             {
                 Console.WriteLine("It's hot outside!");
@@ -56,120 +58,74 @@ namespace Lab1_13
 
             // If-else if-else chain
             if (temperature >= 90)
-            {
                 Console.WriteLine("Weather: Very Hot");
-            }
             else if (temperature >= 80)
-            {
                 Console.WriteLine("Weather: Hot");
-            }
             else if (temperature >= 70)
-            {
                 Console.WriteLine("Weather: Warm");
-            }
             else if (temperature >= 60)
-            {
                 Console.WriteLine("Weather: Cool");
-            }
             else
-            {
                 Console.WriteLine("Weather: Cold");
-            }
 
-            // Nested if statements
+            // Nested ifs
             bool isWeekend = true;
             if (temperature > 70)
             {
-                if (isWeekend)
-                {
-                    Console.WriteLine("Perfect day for outdoor activities!");
-                }
-                else
-                {
-                    Console.WriteLine("Nice weather for work day.");
-                }
+                if (isWeekend) Console.WriteLine("Perfect day for outdoor activities!");
+                else Console.WriteLine("Nice weather for work day.");
             }
 
-            // Ternary operator (conditional expression)
+            // Ternary
             string activity = temperature > 80 ? "Swimming" : "Walking";
             Console.WriteLine($"Recommended activity: {activity}");
 
             // Multiple conditions
             int humidity = 60;
             if (temperature > 80 && humidity > 70)
-            {
                 Console.WriteLine("It's hot and humid!");
-            }
             else if (temperature > 80 || humidity > 70)
-            {
                 Console.WriteLine("Either hot or humid.");
-            }
         }
 
         public static void DemonstrateSwitchStatement()
         {
             Console.WriteLine("\n=== Switch Statements ===\n");
 
-            // Traditional switch statement
+            // Switch on int
             int dayOfWeek = 3;
             Console.WriteLine($"Day number: {dayOfWeek}");
 
             switch (dayOfWeek)
             {
-                case 1:
-                    Console.WriteLine("Monday - Start of work week");
-                    break;
-                case 2:
-                    Console.WriteLine("Tuesday - Getting into the groove");
-                    break;
-                case 3:
-                    Console.WriteLine("Wednesday - Hump day!");
-                    break;
-                case 4:
-                    Console.WriteLine("Thursday - Almost there");
-                    break;
-                case 5:
-                    Console.WriteLine("Friday - TGIF!");
-                    break;
+                case 1: Console.WriteLine("Monday - Start of work week"); break;
+                case 2: Console.WriteLine("Tuesday - Getting into the groove"); break;
+                case 3: Console.WriteLine("Wednesday - Hump day!"); break;
+                case 4: Console.WriteLine("Thursday - Almost there"); break;
+                case 5: Console.WriteLine("Friday - TGIF!"); break;
                 case 6:
-                case 7:
-                    Console.WriteLine("Weekend - Time to relax!");
-                    break;
-                default:
-                    Console.WriteLine("Invalid day number");
-                    break;
+                case 7: Console.WriteLine("Weekend - Time to relax!"); break;
+                default: Console.WriteLine("Invalid day number"); break;
             }
 
             // Switch with string
             string grade = "B";
             switch (grade.ToUpper())
             {
-                case "A":
-                    Console.WriteLine("Excellent work!");
-                    break;
-                case "B":
-                    Console.WriteLine("Good job!");
-                    break;
-                case "C":
-                    Console.WriteLine("Satisfactory");
-                    break;
-                case "D":
-                    Console.WriteLine("Needs improvement");
-                    break;
-                case "F":
-                    Console.WriteLine("Failed");
-                    break;
-                default:
-                    Console.WriteLine("Invalid grade");
-                    break;
+                case "A": Console.WriteLine("Excellent work!"); break;
+                case "B": Console.WriteLine("Good job!"); break;
+                case "C": Console.WriteLine("Satisfactory"); break;
+                case "D": Console.WriteLine("Needs improvement"); break;
+                case "F": Console.WriteLine("Failed"); break;
+                default: Console.WriteLine("Invalid grade"); break;
             }
         }
 
         public static void DemonstrateSwitchExpressions()
         {
-            Console.WriteLine("\n=== Switch Expressions (C# 8.0+) ===\n");
+            Console.WriteLine("\n=== Switch Expressions (C# 8+) ===\n");
 
-            // Switch expression with simple values
+            // Simple values
             int month = 6;
             string season = month switch
             {
@@ -181,7 +137,7 @@ namespace Lab1_13
             };
             Console.WriteLine($"Month {month} is in {season}");
 
-            // Switch expression with ranges
+            // Ranges
             int score = 85;
             string letterGrade = score switch
             {
@@ -193,20 +149,20 @@ namespace Lab1_13
             };
             Console.WriteLine($"Score {score} = Grade {letterGrade}");
 
-            // Switch expression with type patterns
+            // Type patterns
             object value = "Hello";
             string description = value switch
             {
-                int i => $"Integer: {i}",
+                int i    => $"Integer: {i}",
                 string s => $"String: '{s}'",
-                bool b => $"Boolean: {b}",
+                bool b   => $"Boolean: {b}",
                 double d => $"Double: {d:F2}",
-                null => "Null value",
-                _ => $"Unknown type: {value.GetType().Name}"
+                null     => "Null value",
+                _        => $"Unknown type: {value.GetType().Name}"
             };
             Console.WriteLine(description);
 
-            // Switch expression with property patterns
+            // Property patterns (anonymous type)
             var person = new { Name = "Alice", Age = 25 };
             string category = person switch
             {
@@ -219,11 +175,15 @@ namespace Lab1_13
         }
     }
 }
+
 ```
 
 ### Task 2: Loop Structures
 Create `LoopStructures.cs`:
 ```csharp
+using System;
+using System.Collections.Generic;
+
 namespace Lab1_13
 {
     public static class LoopStructures
@@ -232,42 +192,27 @@ namespace Lab1_13
         {
             Console.WriteLine("=== For Loops ===\n");
 
-            // Basic for loop
             Console.WriteLine("Counting from 1 to 5:");
             for (int i = 1; i <= 5; i++)
-            {
                 Console.WriteLine($"  Count: {i}");
-            }
 
-            // For loop with different increment
             Console.WriteLine("\nCounting by 2s from 0 to 10:");
             for (int i = 0; i <= 10; i += 2)
-            {
                 Console.WriteLine($"  Even number: {i}");
-            }
 
-            // Reverse for loop
             Console.WriteLine("\nCountdown from 5 to 1:");
             for (int i = 5; i >= 1; i--)
-            {
                 Console.WriteLine($"  Countdown: {i}");
-            }
 
-            // For loop with multiple variables
             Console.WriteLine("\nMultiple variables in for loop:");
             for (int i = 0, j = 10; i < 5; i++, j--)
-            {
                 Console.WriteLine($"  i = {i}, j = {j}");
-            }
 
-            // Nested for loops
             Console.WriteLine("\nMultiplication table (3x3):");
             for (int row = 1; row <= 3; row++)
             {
                 for (int col = 1; col <= 3; col++)
-                {
                     Console.Write($"{row * col,4}");
-                }
                 Console.WriteLine();
             }
         }
@@ -276,7 +221,6 @@ namespace Lab1_13
         {
             Console.WriteLine("\n=== While Loops ===\n");
 
-            // Basic while loop
             Console.WriteLine("While loop counting to 5:");
             int count = 1;
             while (count <= 5)
@@ -285,7 +229,6 @@ namespace Lab1_13
                 count++;
             }
 
-            // While loop with user input simulation
             Console.WriteLine("\nGuessing game simulation:");
             Random random = new Random();
             int target = random.Next(1, 11);
@@ -297,8 +240,8 @@ namespace Lab1_13
                 guess = random.Next(1, 11);
                 attempts++;
                 Console.WriteLine($"  Attempt {attempts}: Guessed {guess}");
-                
-                if (attempts > 10) // Safety break
+
+                if (attempts > 10) // safety break
                 {
                     Console.WriteLine("  Too many attempts, giving up!");
                     break;
@@ -306,16 +249,13 @@ namespace Lab1_13
             }
 
             if (guess == target)
-            {
                 Console.WriteLine($"  Found target {target} in {attempts} attempts!");
-            }
         }
 
         public static void DemonstrateDoWhileLoop()
         {
             Console.WriteLine("\n=== Do-While Loops ===\n");
 
-            // Do-while loop (executes at least once)
             Console.WriteLine("Do-while loop (executes at least once):");
             int value = 10;
             do
@@ -324,7 +264,6 @@ namespace Lab1_13
                 value--;
             } while (value > 5);
 
-            // Compare with while loop that might not execute
             Console.WriteLine("\nCompare with while loop:");
             value = 0;
             while (value > 5)
@@ -344,57 +283,41 @@ namespace Lab1_13
         {
             Console.WriteLine("\n=== Foreach Loops ===\n");
 
-            // Foreach with array
             int[] numbers = { 10, 20, 30, 40, 50 };
             Console.WriteLine("Iterating through array:");
             foreach (int number in numbers)
-            {
                 Console.WriteLine($"  Number: {number}");
-            }
 
-            // Foreach with List
-            List<string> fruits = new List<string> { "Apple", "Banana", "Orange", "Grape" };
+            List<string> fruits = new() { "Apple", "Banana", "Orange", "Grape" };
             Console.WriteLine("\nIterating through List:");
             foreach (string fruit in fruits)
-            {
                 Console.WriteLine($"  Fruit: {fruit}");
-            }
 
-            // Foreach with string (each character)
             string text = "Hello";
             Console.WriteLine($"\nIterating through string '{text}':");
             foreach (char c in text)
-            {
                 Console.WriteLine($"  Character: '{c}'");
-            }
 
-            // Foreach with Dictionary
-            Dictionary<string, int> ages = new Dictionary<string, int>
+            Dictionary<string, int> ages = new()
             {
-                { "Alice", 25 },
-                { "Bob", 30 },
-                { "Charlie", 35 }
+                ["Alice"] = 25,
+                ["Bob"] = 30,
+                ["Charlie"] = 35
             };
 
             Console.WriteLine("\nIterating through Dictionary:");
             foreach (KeyValuePair<string, int> kvp in ages)
-            {
                 Console.WriteLine($"  {kvp.Key} is {kvp.Value} years old");
-            }
 
-            // Foreach with var keyword
             Console.WriteLine("\nUsing var in foreach:");
             foreach (var person in ages)
-            {
                 Console.WriteLine($"  {person.Key}: {person.Value}");
-            }
         }
 
         public static void DemonstrateAdvancedLoopControl()
         {
             Console.WriteLine("\n=== Advanced Loop Control ===\n");
 
-            // Break statement
             Console.WriteLine("Using break to exit loop early:");
             for (int i = 1; i <= 10; i++)
             {
@@ -406,18 +329,13 @@ namespace Lab1_13
                 Console.WriteLine($"  Processing: {i}");
             }
 
-            // Continue statement
             Console.WriteLine("\nUsing continue to skip iterations:");
             for (int i = 1; i <= 10; i++)
             {
-                if (i % 2 == 0)
-                {
-                    continue; // Skip even numbers
-                }
+                if (i % 2 == 0) continue; // skip even
                 Console.WriteLine($"  Odd number: {i}");
             }
 
-            // Nested loops with labeled break (using goto - not recommended but shown for completeness)
             Console.WriteLine("\nNested loops with early exit:");
             bool found = false;
             for (int i = 1; i <= 3 && !found; i++)
@@ -434,7 +352,6 @@ namespace Lab1_13
                 }
             }
 
-            // Using return to exit method from within loop
             Console.WriteLine("\nDemonstrating early method return:");
             FindFirstEven(new int[] { 1, 3, 5, 8, 9, 12 });
         }
@@ -448,18 +365,21 @@ namespace Lab1_13
                 if (number % 2 == 0)
                 {
                     Console.WriteLine($"  Found first even number: {number}");
-                    return; // Exit method immediately
+                    return; // exit method
                 }
             }
             Console.WriteLine("  No even numbers found");
         }
     }
 }
+
 ```
 
 ### Task 3: Practical Examples
 Create `PracticalExamples.cs`:
 ```csharp
+using System;
+
 namespace Lab1_13
 {
     public static class PracticalExamples
@@ -468,7 +388,7 @@ namespace Lab1_13
         {
             Console.WriteLine("=== Number Guessing Game ===\n");
 
-            Random random = new Random();
+            Random random = new();
             int secretNumber = random.Next(1, 101);
             int attempts = 0;
             int maxAttempts = 7;
@@ -477,14 +397,14 @@ namespace Lab1_13
             Console.WriteLine("I'm thinking of a number between 1 and 100.");
             Console.WriteLine($"You have {maxAttempts} attempts to guess it!");
 
-            // Simulate user guesses
+            // Simulated guesses (to keep the demo non-interactive)
             int[] simulatedGuesses = { 50, 75, 88, 94, 91, 89, 90 };
 
             for (int i = 0; i < maxAttempts && !hasWon; i++)
             {
                 attempts++;
                 int guess = simulatedGuesses[Math.Min(i, simulatedGuesses.Length - 1)];
-                
+
                 Console.WriteLine($"\nAttempt {attempts}: Guessing {guess}");
 
                 if (guess == secretNumber)
@@ -503,9 +423,7 @@ namespace Lab1_13
             }
 
             if (!hasWon)
-            {
                 Console.WriteLine($"\n😞 Game over! The number was {secretNumber}.");
-            }
         }
 
         public static void CalculateFactorial()
@@ -525,7 +443,7 @@ namespace Lab1_13
                 long factorial = 1;
                 Console.Write($"Factorial of {number}: ");
 
-                if (number == 0 || number == 1)
+                if (number is 0 or 1)
                 {
                     Console.WriteLine($"{number}! = 1");
                 }
@@ -551,16 +469,9 @@ namespace Lab1_13
             Console.WriteLine($"First {count} Fibonacci numbers:");
 
             long first = 0, second = 1;
-            
-            if (count >= 1)
-            {
-                Console.Write($"{first}");
-            }
-            
-            if (count >= 2)
-            {
-                Console.Write($", {second}");
-            }
+
+            if (count >= 1) Console.Write($"{first}");
+            if (count >= 2) Console.Write($", {second}");
 
             for (int i = 3; i <= count; i++)
             {
@@ -583,7 +494,6 @@ namespace Lab1_13
             {
                 bool isPrime = true;
 
-                // Check if number is prime
                 for (int divisor = 2; divisor <= Math.Sqrt(number); divisor++)
                 {
                     if (number % divisor == 0)
@@ -593,10 +503,7 @@ namespace Lab1_13
                     }
                 }
 
-                if (isPrime)
-                {
-                    Console.Write($"{number} ");
-                }
+                if (isPrime) Console.Write($"{number} ");
             }
             Console.WriteLine();
         }
@@ -608,40 +515,36 @@ namespace Lab1_13
             int size = 10;
             Console.WriteLine($"{size}x{size} Multiplication Table:");
 
-            // Print header
+            // Header
             Console.Write("    ");
             for (int col = 1; col <= size; col++)
-            {
                 Console.Write($"{col,4}");
-            }
             Console.WriteLine();
 
-            // Print separator
+            // Separator
             Console.Write("    ");
             for (int col = 1; col <= size; col++)
-            {
                 Console.Write("----");
-            }
             Console.WriteLine();
 
-            // Print table
+            // Body
             for (int row = 1; row <= size; row++)
             {
                 Console.Write($"{row,2}: ");
                 for (int col = 1; col <= size; col++)
-                {
                     Console.Write($"{row * col,4}");
-                }
                 Console.WriteLine();
             }
         }
     }
 }
+
 ```
 
 ### Task 4: Main Program
 Create `Program.cs`:
 ```csharp
+using System;
 using Lab1_13;
 
 Console.WriteLine("=== Conditionals and Loops Demo ===\n");
@@ -667,6 +570,7 @@ PracticalExamples.MultiplicationTable();
 
 Console.WriteLine("\nPress any key to exit...");
 Console.ReadKey();
+
 ```
 
 ## Control Flow Summary
