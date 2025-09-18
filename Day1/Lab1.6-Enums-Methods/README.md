@@ -57,17 +57,16 @@ namespace Lab1_6.Enums
         Cryptocurrency
     }
 
-    // Flags enum for multiple selections
     [Flags]
     public enum DeliveryOptions
     {
         None = 0,
-        StandardShipping = 1,
-        ExpressShipping = 2,
-        OvernightShipping = 4,
-        SignatureRequired = 8,
-        InsuranceIncluded = 16,
-        TrackingIncluded = 32
+        StandardShipping   = 1,
+        ExpressShipping    = 2,
+        OvernightShipping  = 4,
+        SignatureRequired  = 8,
+        InsuranceIncluded  = 16,
+        TrackingIncluded   = 32
     }
 }
 ```
@@ -82,7 +81,7 @@ namespace Lab1_6.Models
     public class Order
     {
         private static int _nextOrderId = 1000;
-        private List<OrderItem> _items;
+        private readonly List<OrderItem> _items;
 
         public int OrderId { get; }
         public string CustomerName { get; set; }
@@ -93,7 +92,6 @@ namespace Lab1_6.Models
         public DeliveryOptions DeliveryOptions { get; set; }
         public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
 
-        // Constructor
         public Order(string customerName, PaymentMethod paymentMethod)
         {
             OrderId = _nextOrderId++;
@@ -106,131 +104,92 @@ namespace Lab1_6.Models
             _items = new List<OrderItem>();
         }
 
-        // Method: Add item (overloaded)
-        public void AddItem(string productName, decimal price)
-        {
-            AddItem(productName, price, 1);
-        }
+        // Add item (overloads)
+        public void AddItem(string productName, decimal price) => AddItem(productName, price, 1);
 
         public void AddItem(string productName, decimal price, int quantity)
         {
             if (string.IsNullOrWhiteSpace(productName))
                 throw new ArgumentException("Product name cannot be empty");
-            
             if (price < 0)
                 throw new ArgumentException("Price cannot be negative");
-            
             if (quantity <= 0)
                 throw new ArgumentException("Quantity must be positive");
 
             var item = new OrderItem(productName, price, quantity);
             _items.Add(item);
-            
-            Console.WriteLine($"Added {quantity}x {productName} at ${price:C} each to order {OrderId}");
+
+            Console.WriteLine($"Added {quantity}x {productName} at {price:C} each to order {OrderId}");
         }
 
-        // Method: Remove item
         public bool RemoveItem(string productName)
         {
-            var item = _items.FirstOrDefault(i => i.ProductName.Equals(productName, StringComparison.OrdinalIgnoreCase));
-            if (item != null)
+            var item = _items.FirstOrDefault(i =>
+                i.ProductName.Equals(productName, StringComparison.OrdinalIgnoreCase));
+
+            if (item is null)
             {
-                _items.Remove(item);
-                Console.WriteLine($"Removed {productName} from order {OrderId}");
-                return true;
+                Console.WriteLine($"Product {productName} not found in order {OrderId}");
+                return false;
             }
-            
-            Console.WriteLine($"Product {productName} not found in order {OrderId}");
-            return false;
+
+            _items.Remove(item);
+            Console.WriteLine($"Removed {productName} from order {OrderId}");
+            return true;
         }
 
-        // Method: Calculate total
-        public decimal GetTotal()
-        {
-            return _items.Sum(item => item.GetSubtotal());
-        }
+        // Totals (overloads)
+        public decimal GetTotal() => _items.Sum(i => i.GetSubtotal());
 
-        // Method: Calculate total with tax
         public decimal GetTotal(decimal taxRate)
         {
             var subtotal = GetTotal();
             return subtotal + (subtotal * taxRate);
         }
 
-        // Method: Calculate total with tax and shipping
-        public decimal GetTotal(decimal taxRate, decimal shippingCost)
-        {
-            return GetTotal(taxRate) + shippingCost;
-        }
+        public decimal GetTotal(decimal taxRate, decimal shippingCost) => GetTotal(taxRate) + shippingCost;
 
-        // Method: Update status
+        // Status
         public void UpdateStatus(OrderStatus newStatus)
         {
-            var oldStatus = Status;
+            var old = Status;
             Status = newStatus;
-            
-            Console.WriteLine($"Order {OrderId} status changed from {oldStatus} to {newStatus}");
-            
-            // Business logic based on status
+            Console.WriteLine($"Order {OrderId} status changed from {old} to {newStatus}");
+
             switch (newStatus)
             {
-                case OrderStatus.Processing:
-                    Console.WriteLine("Order is being prepared for shipment");
-                    break;
-                case OrderStatus.Shipped:
-                    Console.WriteLine("Order has been shipped and is on its way");
-                    break;
-                case OrderStatus.Delivered:
-                    Console.WriteLine("Order has been successfully delivered");
-                    break;
-                case OrderStatus.Cancelled:
-                    Console.WriteLine("Order has been cancelled");
-                    break;
+                case OrderStatus.Processing: Console.WriteLine("Order is being prepared for shipment"); break;
+                case OrderStatus.Shipped:    Console.WriteLine("Order has been shipped and is on its way"); break;
+                case OrderStatus.Delivered:  Console.WriteLine("Order has been successfully delivered"); break;
+                case OrderStatus.Cancelled:  Console.WriteLine("Order has been cancelled"); break;
             }
         }
 
-        // Method: Check if express delivery
-        public bool HasExpressDelivery()
-        {
-            return DeliveryOptions.HasFlag(DeliveryOptions.ExpressShipping) || 
-                   DeliveryOptions.HasFlag(DeliveryOptions.OvernightShipping);
-        }
+        public bool HasExpressDelivery() =>
+            DeliveryOptions.HasFlag(DeliveryOptions.ExpressShipping) ||
+            DeliveryOptions.HasFlag(DeliveryOptions.OvernightShipping);
 
-        // Method: Get delivery description
         public string GetDeliveryDescription()
         {
-            var descriptions = new List<string>();
-            
-            if (DeliveryOptions.HasFlag(DeliveryOptions.StandardShipping))
-                descriptions.Add("Standard Shipping");
-            if (DeliveryOptions.HasFlag(DeliveryOptions.ExpressShipping))
-                descriptions.Add("Express Shipping");
-            if (DeliveryOptions.HasFlag(DeliveryOptions.OvernightShipping))
-                descriptions.Add("Overnight Shipping");
-            if (DeliveryOptions.HasFlag(DeliveryOptions.SignatureRequired))
-                descriptions.Add("Signature Required");
-            if (DeliveryOptions.HasFlag(DeliveryOptions.InsuranceIncluded))
-                descriptions.Add("Insurance Included");
-            if (DeliveryOptions.HasFlag(DeliveryOptions.TrackingIncluded))
-                descriptions.Add("Tracking Included");
-            
-            return string.Join(", ", descriptions);
+            var parts = new List<string>();
+            if (DeliveryOptions.HasFlag(DeliveryOptions.StandardShipping))  parts.Add("Standard Shipping");
+            if (DeliveryOptions.HasFlag(DeliveryOptions.ExpressShipping))   parts.Add("Express Shipping");
+            if (DeliveryOptions.HasFlag(DeliveryOptions.OvernightShipping)) parts.Add("Overnight Shipping");
+            if (DeliveryOptions.HasFlag(DeliveryOptions.SignatureRequired)) parts.Add("Signature Required");
+            if (DeliveryOptions.HasFlag(DeliveryOptions.InsuranceIncluded)) parts.Add("Insurance Included");
+            if (DeliveryOptions.HasFlag(DeliveryOptions.TrackingIncluded))  parts.Add("Tracking Included");
+            return string.Join(", ", parts);
         }
 
-        // Method: Get priority color (for UI)
-        public string GetPriorityColor()
+        public string GetPriorityColor() => Priority switch
         {
-            return Priority switch
-            {
-                Priority.Low => "Green",
-                Priority.Normal => "Blue",
-                Priority.High => "Orange",
-                Priority.Critical => "Red",
-                _ => "Gray"
-            };
-        }
+            Priority.Low      => "Green",
+            Priority.Normal   => "Blue",
+            Priority.High     => "Orange",
+            Priority.Critical => "Red",
+            _ => "Gray"
+        };
 
-        // Method: Print order summary
         public void PrintOrderSummary()
         {
             Console.WriteLine($"\n=== Order Summary ===");
@@ -242,33 +201,31 @@ namespace Lab1_6.Models
             Console.WriteLine($"Payment Method: {PaymentMethod}");
             Console.WriteLine($"Delivery Options: {GetDeliveryDescription()}");
             Console.WriteLine($"Express Delivery: {(HasExpressDelivery() ? "Yes" : "No")}");
-            
+
             Console.WriteLine("\nItems:");
-            foreach (var item in _items)
-            {
-                Console.WriteLine($"  {item}");
-            }
-            
-            Console.WriteLine($"\nSubtotal: ${GetTotal():C}");
-            Console.WriteLine($"Total with Tax (8.5%): ${GetTotal(0.085m):C}");
-            Console.WriteLine($"Total with Tax and Shipping ($15): ${GetTotal(0.085m, 15m):C}");
+            foreach (var item in _items) Console.WriteLine($"  {item}");
+
+            Console.WriteLine($"\nSubtotal: {GetTotal():C}");
+            Console.WriteLine($"Total with Tax (8.5%): {GetTotal(0.085m):C}");
+            Console.WriteLine($"Total with Tax and Shipping (15): {GetTotal(0.085m, 15m):C}");
             Console.WriteLine("=====================\n");
         }
 
-        // Static method: Create sample order
+        // Sample factory
         public static Order CreateSampleOrder()
         {
-            var order = new Order("John Doe", PaymentMethod.CreditCard);
-            order.Priority = Priority.High;
-            order.DeliveryOptions = DeliveryOptions.ExpressShipping | 
-                                   DeliveryOptions.SignatureRequired | 
-                                   DeliveryOptions.InsuranceIncluded | 
-                                   DeliveryOptions.TrackingIncluded;
-            
+            var order = new Order("John Doe", PaymentMethod.CreditCard)
+            {
+                Priority = Priority.High,
+                DeliveryOptions = DeliveryOptions.ExpressShipping |
+                                  DeliveryOptions.SignatureRequired |
+                                  DeliveryOptions.InsuranceIncluded |
+                                  DeliveryOptions.TrackingIncluded
+            };
+
             order.AddItem("Laptop", 999.99m);
             order.AddItem("Mouse", 29.99m, 2);
             order.AddItem("Keyboard", 79.99m);
-            
             return order;
         }
     }
@@ -286,15 +243,9 @@ namespace Lab1_6.Models
             Quantity = quantity;
         }
 
-        public decimal GetSubtotal()
-        {
-            return Price * Quantity;
-        }
+        public decimal GetSubtotal() => Price * Quantity;
 
-        public override string ToString()
-        {
-            return $"{Quantity}x {ProductName} @ ${Price:C} = ${GetSubtotal():C}";
-        }
+        public override string ToString() => $"{Quantity}x {ProductName} @ {Price:C} = {GetSubtotal():C}";
     }
 }
 ```
@@ -309,116 +260,78 @@ namespace Lab1_6.Utilities
 {
     public static class OrderUtilities
     {
-        // Method: Parse order status from string
-        public static OrderStatus ParseOrderStatus(string statusText)
+        public static OrderStatus ParseOrderStatus(string text)
         {
-            if (Enum.TryParse<OrderStatus>(statusText, true, out var status))
-            {
-                return status;
-            }
-            throw new ArgumentException($"Invalid order status: {statusText}");
+            if (Enum.TryParse<OrderStatus>(text, true, out var status)) return status;
+            throw new ArgumentException($"Invalid order status: {text}");
         }
 
-        // Method: Get all order statuses
-        public static OrderStatus[] GetAllOrderStatuses()
-        {
-            return Enum.GetValues<OrderStatus>();
-        }
+        public static OrderStatus[] GetAllOrderStatuses() => Enum.GetValues<OrderStatus>();
 
-        // Method: Get status description
-        public static string GetStatusDescription(OrderStatus status)
+        public static string GetStatusDescription(OrderStatus status) => status switch
         {
-            return status switch
-            {
-                OrderStatus.Pending => "Order received and awaiting processing",
-                OrderStatus.Processing => "Order is being prepared",
-                OrderStatus.Shipped => "Order has been shipped",
-                OrderStatus.Delivered => "Order has been delivered to customer",
-                OrderStatus.Cancelled => "Order has been cancelled",
-                OrderStatus.Returned => "Order has been returned by customer",
-                _ => "Unknown status"
-            };
-        }
+            OrderStatus.Pending    => "Order received and awaiting processing",
+            OrderStatus.Processing => "Order is being prepared",
+            OrderStatus.Shipped    => "Order has been shipped",
+            OrderStatus.Delivered  => "Order has been delivered to customer",
+            OrderStatus.Cancelled  => "Order has been cancelled",
+            OrderStatus.Returned   => "Order has been returned by customer",
+            _ => "Unknown status"
+        };
 
-        // Method: Calculate estimated delivery days
         public static int GetEstimatedDeliveryDays(DeliveryOptions options, Priority priority)
         {
-            int baseDays = 5; // Standard shipping
+            int baseDays = 5;
+            if (options.HasFlag(DeliveryOptions.ExpressShipping))         baseDays = 2;
+            else if (options.HasFlag(DeliveryOptions.OvernightShipping))  baseDays = 1;
 
-            if (options.HasFlag(DeliveryOptions.ExpressShipping))
-                baseDays = 2;
-            else if (options.HasFlag(DeliveryOptions.OvernightShipping))
-                baseDays = 1;
-
-            // Priority adjustment
             return priority switch
             {
                 Priority.Critical => Math.Max(1, baseDays - 1),
-                Priority.High => baseDays,
-                Priority.Normal => baseDays + 1,
-                Priority.Low => baseDays + 2,
+                Priority.High     => baseDays,
+                Priority.Normal   => baseDays + 1,
+                Priority.Low      => baseDays + 2,
                 _ => baseDays
             };
         }
 
-        // Method: Format payment method for display
-        public static string FormatPaymentMethod(PaymentMethod method)
+        public static string FormatPaymentMethod(PaymentMethod m) => m switch
         {
-            return method switch
-            {
-                PaymentMethod.CreditCard => "Credit Card",
-                PaymentMethod.DebitCard => "Debit Card",
-                PaymentMethod.PayPal => "PayPal",
-                PaymentMethod.BankTransfer => "Bank Transfer",
-                PaymentMethod.Cash => "Cash",
-                PaymentMethod.Cryptocurrency => "Cryptocurrency",
-                _ => method.ToString()
-            };
-        }
+            PaymentMethod.CreditCard     => "Credit Card",
+            PaymentMethod.DebitCard      => "Debit Card",
+            PaymentMethod.PayPal         => "PayPal",
+            PaymentMethod.BankTransfer   => "Bank Transfer",
+            PaymentMethod.Cash           => "Cash",
+            PaymentMethod.Cryptocurrency => "Cryptocurrency",
+            _ => m.ToString()
+        };
 
-        // Method: Validate order for processing
         public static (bool IsValid, string[] Errors) ValidateOrder(Order order)
         {
             var errors = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(order.CustomerName))
-                errors.Add("Customer name is required");
-
-            if (!order.Items.Any())
-                errors.Add("Order must contain at least one item");
-
-            if (order.GetTotal() <= 0)
-                errors.Add("Order total must be greater than zero");
-
+            if (string.IsNullOrWhiteSpace(order.CustomerName)) errors.Add("Customer name is required");
+            if (!order.Items.Any()) errors.Add("Order must contain at least one item");
+            if (order.GetTotal() <= 0) errors.Add("Order total must be greater than zero");
             return (errors.Count == 0, errors.ToArray());
         }
 
-        // Method: Generate order report
         public static void GenerateOrderReport(IEnumerable<Order> orders)
         {
             Console.WriteLine("\n=== Order Report ===");
-            
-            var orderList = orders.ToList();
-            Console.WriteLine($"Total Orders: {orderList.Count}");
-            
-            if (orderList.Any())
+            var list = orders.ToList();
+            Console.WriteLine($"Total Orders: {list.Count}");
+            if (list.Any())
             {
-                Console.WriteLine($"Total Revenue: ${orderList.Sum(o => o.GetTotal()):C}");
-                Console.WriteLine($"Average Order Value: ${orderList.Average(o => o.GetTotal()):C}");
-                
+                Console.WriteLine($"Total Revenue: {list.Sum(o => o.GetTotal()):C}");
+                Console.WriteLine($"Average Order Value: {list.Average(o => o.GetTotal()):C}");
+
                 Console.WriteLine("\nOrders by Status:");
-                var statusGroups = orderList.GroupBy(o => o.Status);
-                foreach (var group in statusGroups)
-                {
-                    Console.WriteLine($"  {group.Key}: {group.Count()} orders");
-                }
-                
+                foreach (var g in list.GroupBy(o => o.Status))
+                    Console.WriteLine($"  {g.Key}: {g.Count()} orders");
+
                 Console.WriteLine("\nOrders by Priority:");
-                var priorityGroups = orderList.GroupBy(o => o.Priority);
-                foreach (var group in priorityGroups)
-                {
-                    Console.WriteLine($"  {group.Key}: {group.Count()} orders");
-                }
+                foreach (var g in list.GroupBy(o => o.Priority))
+                    Console.WriteLine($"  {g.Key}: {g.Count()} orders");
             }
             Console.WriteLine("===================\n");
         }
@@ -435,105 +348,94 @@ using Lab1_6.Utilities;
 
 Console.WriteLine("=== Enums and Methods Demo ===\n");
 
-// Create orders using different methods
 var orders = new List<Order>();
 
-// Method 1: Create order step by step
+// Create order step by step
 Console.WriteLine("--- Creating Order Step by Step ---");
-var order1 = new Order("Alice Johnson", PaymentMethod.PayPal);
-order1.Priority = Priority.High;
+var order1 = new Order("Alice Johnson", PaymentMethod.PayPal)
+{
+    Priority = Priority.High
+};
 order1.AddItem("Smartphone", 699.99m);
 order1.AddItem("Phone Case", 19.99m, 2);
 order1.AddItem("Screen Protector", 9.99m, 3);
 orders.Add(order1);
 
-// Method 2: Create sample order
+// Sample order
 Console.WriteLine("\n--- Creating Sample Order ---");
 var order2 = Order.CreateSampleOrder();
 orders.Add(order2);
 
-// Method 3: Create order with different delivery options
+// Custom delivery
 Console.WriteLine("\n--- Creating Order with Custom Delivery ---");
-var order3 = new Order("Bob Smith", PaymentMethod.CreditCard);
-order3.Priority = Priority.Critical;
-order3.DeliveryOptions = DeliveryOptions.OvernightShipping | 
-                        DeliveryOptions.SignatureRequired | 
-                        DeliveryOptions.InsuranceIncluded;
+var order3 = new Order("Bob Smith", PaymentMethod.CreditCard)
+{
+    Priority = Priority.Critical,
+    DeliveryOptions = DeliveryOptions.OvernightShipping |
+                      DeliveryOptions.SignatureRequired |
+                      DeliveryOptions.InsuranceIncluded
+};
 order3.AddItem("Gaming Console", 499.99m);
 order3.AddItem("Controller", 59.99m, 2);
 orders.Add(order3);
 
-// Demonstrate method overloading
+// Overloading demo
 Console.WriteLine("\n--- Method Overloading Demo ---");
-Console.WriteLine($"Order 1 Subtotal: ${order1.GetTotal():C}");
-Console.WriteLine($"Order 1 with Tax (8.5%): ${order1.GetTotal(0.085m):C}");
-Console.WriteLine($"Order 1 with Tax and Shipping: ${order1.GetTotal(0.085m, 12.99m):C}");
+Console.WriteLine($"Order 1 Subtotal: {order1.GetTotal():C}");
+Console.WriteLine($"Order 1 with Tax (8.5%): {order1.GetTotal(0.085m):C}");
+Console.WriteLine($"Order 1 with Tax and Shipping: {order1.GetTotal(0.085m, 12.99m):C}");
 
-// Work with enums
+// Enums
 Console.WriteLine("\n--- Working with Enums ---");
 Console.WriteLine("Available Order Statuses:");
 foreach (var status in OrderUtilities.GetAllOrderStatuses())
-{
     Console.WriteLine($"  {status} ({(int)status}): {OrderUtilities.GetStatusDescription(status)}");
-}
 
 Console.WriteLine("\nAvailable Payment Methods:");
 foreach (PaymentMethod method in Enum.GetValues<PaymentMethod>())
-{
     Console.WriteLine($"  {OrderUtilities.FormatPaymentMethod(method)}");
-}
 
-// Demonstrate flags enum
+// Flags demo
 Console.WriteLine("\n--- Flags Enum Demo ---");
-var deliveryOptions = DeliveryOptions.ExpressShipping | DeliveryOptions.SignatureRequired;
-Console.WriteLine($"Selected options: {deliveryOptions}");
-Console.WriteLine($"Has Express Shipping: {deliveryOptions.HasFlag(DeliveryOptions.ExpressShipping)}");
-Console.WriteLine($"Has Insurance: {deliveryOptions.HasFlag(DeliveryOptions.InsuranceIncluded)}");
+var opts = DeliveryOptions.ExpressShipping | DeliveryOptions.SignatureRequired;
+Console.WriteLine($"Selected options: {opts}");
+Console.WriteLine($"Has Express Shipping: {opts.HasFlag(DeliveryOptions.ExpressShipping)}");
+Console.WriteLine($"Has Insurance: {opts.HasFlag(DeliveryOptions.InsuranceIncluded)}");
 
-// Process orders through different statuses
+// Process & report
 Console.WriteLine("\n--- Order Processing Demo ---");
-foreach (var order in orders)
+foreach (var o in orders)
 {
-    order.PrintOrderSummary();
-    
-    // Validate order
-    var (isValid, errors) = OrderUtilities.ValidateOrder(order);
+    o.PrintOrderSummary();
+
+    var (isValid, errors) = OrderUtilities.ValidateOrder(o);
     if (isValid)
     {
         Console.WriteLine("✓ Order validation passed");
-        
-        // Process through statuses
-        order.UpdateStatus(OrderStatus.Processing);
-        
-        var estimatedDays = OrderUtilities.GetEstimatedDeliveryDays(order.DeliveryOptions, order.Priority);
-        Console.WriteLine($"Estimated delivery: {estimatedDays} days");
-        
-        order.UpdateStatus(OrderStatus.Shipped);
-        order.UpdateStatus(OrderStatus.Delivered);
+        o.UpdateStatus(OrderStatus.Processing);
+        var eta = OrderUtilities.GetEstimatedDeliveryDays(o.DeliveryOptions, o.Priority);
+        Console.WriteLine($"Estimated delivery: {eta} days");
+        o.UpdateStatus(OrderStatus.Shipped);
+        o.UpdateStatus(OrderStatus.Delivered);
     }
     else
     {
         Console.WriteLine("✗ Order validation failed:");
-        foreach (var error in errors)
-        {
-            Console.WriteLine($"  - {error}");
-        }
+        foreach (var e in errors) Console.WriteLine($"  - {e}");
     }
-    
+
     Console.WriteLine(new string('-', 50));
 }
 
-// Generate report
 OrderUtilities.GenerateOrderReport(orders);
 
-// Demonstrate enum parsing
+// Enum parsing
 Console.WriteLine("--- Enum Parsing Demo ---");
 try
 {
-    var status = OrderUtilities.ParseOrderStatus("Shipped");
-    Console.WriteLine($"Parsed status: {status}");
-    
-    var invalidStatus = OrderUtilities.ParseOrderStatus("InvalidStatus");
+    var ok = OrderUtilities.ParseOrderStatus("Shipped");
+    Console.WriteLine($"Parsed status: {ok}");
+    var _ = OrderUtilities.ParseOrderStatus("InvalidStatus");
 }
 catch (ArgumentException ex)
 {
