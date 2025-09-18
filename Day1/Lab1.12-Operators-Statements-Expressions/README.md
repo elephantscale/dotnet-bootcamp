@@ -27,6 +27,8 @@ Learn bitwise, null-coalescing, and other specialized operators.
 ### Task 1: Arithmetic Operators
 Create `ArithmeticOperators.cs`:
 ```csharp
+using System;
+
 namespace Lab1_12
 {
     public static class ArithmeticOperators
@@ -40,18 +42,18 @@ namespace Lab1_12
             Console.WriteLine($"Addition (a + b): {a + b}");
             Console.WriteLine($"Subtraction (a - b): {a - b}");
             Console.WriteLine($"Multiplication (a * b): {a * b}");
-            Console.WriteLine($"Division (a / b): {a / b}");           // Integer division
-            Console.WriteLine($"Division (a / (double)b): {a / (double)b}"); // Floating-point division
-            Console.WriteLine($"Modulus (a % b): {a % b}");           // Remainder
+            Console.WriteLine($"Division (a / b): {a / b}");
+            Console.WriteLine($"Division (a / (double)b): {a / (double)b}");
+            Console.WriteLine($"Modulus (a % b): {a % b}");
 
             // Unary operators
             Console.WriteLine($"\nUnary plus (+a): {+a}");
             Console.WriteLine($"Unary minus (-a): {-a}");
-            Console.WriteLine($"Pre-increment (++a): {++a}");         // a becomes 16
-            Console.WriteLine($"Post-increment (a++): {a++}");        // Returns 16, then a becomes 17
+            Console.WriteLine($"Pre-increment (++a): {++a}");
+            Console.WriteLine($"Post-increment (a++): {a++}");
             Console.WriteLine($"Current value of a: {a}");
-            Console.WriteLine($"Pre-decrement (--a): {--a}");         // a becomes 16
-            Console.WriteLine($"Post-decrement (a--): {a--}");        // Returns 16, then a becomes 15
+            Console.WriteLine($"Pre-decrement (--a): {--a}");
+            Console.WriteLine($"Post-decrement (a--): {a--}");
             Console.WriteLine($"Final value of a: {a}");
         }
 
@@ -77,12 +79,12 @@ namespace Lab1_12
             x %= 3;  // x = x % 3
             Console.WriteLine($"After x %= 3: {x}");
 
-            // Null-coalescing assignment (C# 8.0+)
+            // Null-coalescing assignment (C# 8+)
             string? text = null;
-            text ??= "Default Value";  // Assign if null
+            text ??= "Default Value";
             Console.WriteLine($"After text ??= 'Default Value': {text}");
 
-            text ??= "Another Value";  // Won't assign because text is not null
+            text ??= "Another Value";
             Console.WriteLine($"After second ??= assignment: {text}");
         }
 
@@ -92,30 +94,33 @@ namespace Lab1_12
 
             string first = "Hello";
             string second = "World";
-            
-            // String concatenation
+
+            // Concatenation
             string result = first + " " + second;
             Console.WriteLine($"Concatenation: {result}");
 
-            // String interpolation (preferred)
+            // Interpolation
             string interpolated = $"{first} {second}!";
             Console.WriteLine($"Interpolation: {interpolated}");
 
-            // String comparison
+            // Comparison
             Console.WriteLine($"first == second: {first == second}");
             Console.WriteLine($"first != second: {first != second}");
 
-            // String with numbers
+            // With numbers
             string numberStr = "Value: " + 42;
             Console.WriteLine($"String + number: {numberStr}");
         }
     }
 }
+
 ```
 
 ### Task 2: Comparison and Logical Operators
 Create `ComparisonLogicalOperators.cs`:
 ```csharp
+using System;
+
 namespace Lab1_12
 {
     public static class ComparisonLogicalOperators
@@ -127,21 +132,21 @@ namespace Lab1_12
             int a = 10, b = 20, c = 10;
             Console.WriteLine($"a = {a}, b = {b}, c = {c}");
 
-            Console.WriteLine($"a == b: {a == b}");     // Equal to
+            Console.WriteLine($"a == b: {a == b}");
             Console.WriteLine($"a == c: {a == c}");
-            Console.WriteLine($"a != b: {a != b}");     // Not equal to
-            Console.WriteLine($"a < b: {a < b}");       // Less than
-            Console.WriteLine($"a > b: {a > b}");       // Greater than
-            Console.WriteLine($"a <= c: {a <= c}");     // Less than or equal to
-            Console.WriteLine($"b >= a: {b >= a}");     // Greater than or equal to
+            Console.WriteLine($"a != b: {a != b}");
+            Console.WriteLine($"a < b: {a < b}");
+            Console.WriteLine($"a > b: {a > b}");
+            Console.WriteLine($"a <= c: {a <= c}");
+            Console.WriteLine($"b >= a: {b >= a}");
 
-            // String comparisons
+            // Strings
             string str1 = "apple", str2 = "banana", str3 = "apple";
             Console.WriteLine($"\nString comparisons:");
             Console.WriteLine($"str1 = '{str1}', str2 = '{str2}', str3 = '{str3}'");
             Console.WriteLine($"str1 == str2: {str1 == str2}");
             Console.WriteLine($"str1 == str3: {str1 == str3}");
-            Console.WriteLine($"str1.CompareTo(str2): {str1.CompareTo(str2)}"); // Lexicographic comparison
+            Console.WriteLine($"str1.CompareTo(str2): {str1.CompareTo(str2)}"); // <0 since apple < banana
         }
 
         public static void DemonstrateLogicalOperators()
@@ -151,28 +156,23 @@ namespace Lab1_12
             bool p = true, q = false;
             Console.WriteLine($"p = {p}, q = {q}");
 
-            // Logical AND
-            Console.WriteLine($"p && q: {p && q}");     // Both must be true
+            // Short-circuiting logical
+            Console.WriteLine($"p && q: {p && q}");
             Console.WriteLine($"p && true: {p && true}");
-
-            // Logical OR
-            Console.WriteLine($"p || q: {p || q}");     // At least one must be true
+            Console.WriteLine($"p || q: {p || q}");
             Console.WriteLine($"q || false: {q || false}");
-
-            // Logical NOT
-            Console.WriteLine($"!p: {!p}");             // Negation
+            Console.WriteLine($"!p: {!p}");
             Console.WriteLine($"!q: {!q}");
 
-            // Short-circuit evaluation
             Console.WriteLine("\nShort-circuit evaluation:");
-            Console.WriteLine($"false && SomeMethod(): {false && SomeExpensiveMethod()}"); // SomeExpensiveMethod() not called
-            Console.WriteLine($"true || SomeMethod(): {true || SomeExpensiveMethod()}");   // SomeExpensiveMethod() not called
+            Console.WriteLine($"false && SomeMethod(): {false && SomeExpensiveMethod()}"); // RHS not evaluated
+            Console.WriteLine($"true || SomeMethod(): {true || SomeExpensiveMethod()}");   // RHS not evaluated
 
-            // Bitwise logical operators (no short-circuit)
+            // Non-short-circuit bitwise logical on bools
             Console.WriteLine($"\nBitwise logical (no short-circuit):");
             Console.WriteLine($"p & q: {p & q}");
             Console.WriteLine($"p | q: {p | q}");
-            Console.WriteLine($"p ^ q: {p ^ q}");       // XOR (exclusive or)
+            Console.WriteLine($"p ^ q: {p ^ q}"); // XOR
         }
 
         private static bool SomeExpensiveMethod()
@@ -189,15 +189,14 @@ namespace Lab1_12
             string status = age >= 18 ? "Adult" : "Minor";
             Console.WriteLine($"Age: {age}, Status: {status}");
 
-            // Nested conditional operators
             int score = 85;
-            string grade = score >= 90 ? "A" : 
-                          score >= 80 ? "B" : 
-                          score >= 70 ? "C" : 
-                          score >= 60 ? "D" : "F";
+            string grade = score >= 90 ? "A" :
+                           score >= 80 ? "B" :
+                           score >= 70 ? "C" :
+                           score >= 60 ? "D" : "F";
             Console.WriteLine($"Score: {score}, Grade: {grade}");
 
-            // Null-conditional operator
+            // Null-conditional
             string? nullableString = null;
             int? length = nullableString?.Length;
             Console.WriteLine($"Nullable string length: {length?.ToString() ?? "null"}");
@@ -208,11 +207,15 @@ namespace Lab1_12
         }
     }
 }
+
 ```
 
 ### Task 3: Advanced Operators
 Create `AdvancedOperators.cs`:
 ```csharp
+using System;
+using System.Collections.Generic;
+
 namespace Lab1_12
 {
     public static class AdvancedOperators
@@ -221,27 +224,26 @@ namespace Lab1_12
         {
             Console.WriteLine("=== Bitwise Operators ===\n");
 
-            int a = 12;  // Binary: 1100
-            int b = 10;  // Binary: 1010
-            
+            int a = 12;  // 1100
+            int b = 10;  // 1010
+
             Console.WriteLine($"a = {a} (binary: {Convert.ToString(a, 2).PadLeft(8, '0')})");
             Console.WriteLine($"b = {b} (binary: {Convert.ToString(b, 2).PadLeft(8, '0')})");
 
-            int andResult = a & b;    // Bitwise AND
-            int orResult = a | b;     // Bitwise OR
-            int xorResult = a ^ b;    // Bitwise XOR
-            int notResult = ~a;       // Bitwise NOT (complement)
+            int andResult = a & b;
+            int orResult  = a | b;
+            int xorResult = a ^ b;
+            int notResult = ~a;
 
             Console.WriteLine($"a & b = {andResult} (binary: {Convert.ToString(andResult, 2).PadLeft(8, '0')})");
-            Console.WriteLine($"a | b = {orResult} (binary: {Convert.ToString(orResult, 2).PadLeft(8, '0')})");
+            Console.WriteLine($"a | b = {orResult}  (binary: {Convert.ToString(orResult, 2).PadLeft(8, '0')})");
             Console.WriteLine($"a ^ b = {xorResult} (binary: {Convert.ToString(xorResult, 2).PadLeft(8, '0')})");
-            Console.WriteLine($"~a = {notResult} (binary: {Convert.ToString(notResult, 2)})");
+            Console.WriteLine($"~a    = {notResult} (binary: {Convert.ToString(notResult, 2)})");
 
-            // Bit shift operators
-            int leftShift = a << 2;   // Left shift by 2 positions
-            int rightShift = a >> 1;  // Right shift by 1 position
+            int leftShift  = a << 2;
+            int rightShift = a >> 1;
 
-            Console.WriteLine($"a << 2 = {leftShift} (binary: {Convert.ToString(leftShift, 2).PadLeft(8, '0')})");
+            Console.WriteLine($"a << 2 = {leftShift}  (binary: {Convert.ToString(leftShift, 2).PadLeft(8, '0')})");
             Console.WriteLine($"a >> 1 = {rightShift} (binary: {Convert.ToString(rightShift, 2).PadLeft(8, '0')})");
         }
 
@@ -252,17 +254,16 @@ namespace Lab1_12
             string? nullableString = null;
             string nonNullString = "Hello";
 
-            // Null-coalescing operator (??)
+            // ?? and ??=
             string result1 = nullableString ?? "Default";
             string result2 = nonNullString ?? "Default";
             Console.WriteLine($"null ?? 'Default': {result1}");
             Console.WriteLine($"'Hello' ?? 'Default': {result2}");
 
-            // Null-coalescing assignment (??=)
             nullableString ??= "Assigned Default";
             Console.WriteLine($"After ??= assignment: {nullableString}");
 
-            // Null-conditional operator (?.)
+            // ?.
             string? testString = null;
             int? length1 = testString?.Length;
             Console.WriteLine($"null?.Length: {length1?.ToString() ?? "null"}");
@@ -271,7 +272,7 @@ namespace Lab1_12
             int? length2 = testString?.Length;
             Console.WriteLine($"'Test'?.Length: {length2}");
 
-            // Null-conditional with arrays/collections
+            // With arrays
             int[]? numbers = null;
             int? firstElement = numbers?[0];
             Console.WriteLine($"null array?[0]: {firstElement?.ToString() ?? "null"}");
@@ -290,28 +291,23 @@ namespace Lab1_12
             foreach (var obj in objects)
             {
                 Console.WriteLine($"Object: {obj}");
-                
-                // 'is' operator for type checking
+
+                // is / as
                 Console.WriteLine($"  is int: {obj is int}");
                 Console.WriteLine($"  is string: {obj is string}");
                 Console.WriteLine($"  is double: {obj is double}");
 
-                // 'as' operator for safe casting
                 string? asString = obj as string;
                 Console.WriteLine($"  as string: {asString ?? "null"}");
 
-                // 'typeof' operator
+                // typeof via runtime type
                 Console.WriteLine($"  typeof: {obj.GetType().Name}");
 
-                // Pattern matching with 'is'
+                // Pattern matching
                 if (obj is int intValue)
-                {
                     Console.WriteLine($"  Integer value: {intValue}");
-                }
                 else if (obj is string stringValue)
-                {
                     Console.WriteLine($"  String value: '{stringValue}'");
-                }
 
                 Console.WriteLine();
             }
@@ -321,37 +317,38 @@ namespace Lab1_12
         {
             Console.WriteLine("=== Operator Precedence ===\n");
 
-            // Without parentheses - follows precedence rules
-            int result1 = 2 + 3 * 4;        // Multiplication first: 2 + 12 = 14
-            int result2 = 10 - 4 / 2;       // Division first: 10 - 2 = 8
-            bool result3 = 5 > 3 && 2 < 4;  // Comparison first, then logical AND
+            // Default precedence
+            int  result1 = 2 + 3 * 4;       // 14
+            int  result2 = 10 - 4 / 2;      // 8
+            bool result3 = 5 > 3 && 2 < 4;  // true
 
             Console.WriteLine($"2 + 3 * 4 = {result1} (multiplication first)");
             Console.WriteLine($"10 - 4 / 2 = {result2} (division first)");
             Console.WriteLine($"5 > 3 && 2 < 4 = {result3} (comparison first)");
 
-            // With parentheses - overrides precedence
-            int result4 = (2 + 3) * 4;      // Addition first: 5 * 4 = 20
-            int result5 = (10 - 4) / 2;     // Subtraction first: 6 / 2 = 3
-            bool result6 = (5 > 3) && (2 < 4); // Explicit grouping
+            // Overriding with parentheses
+            int  result4 = (2 + 3) * 4;     // 20
+            int  result5 = (10 - 4) / 2;    // 3
+            bool result6 = (5 > 3) && (2 < 4);
 
             Console.WriteLine($"(2 + 3) * 4 = {result4} (addition first)");
             Console.WriteLine($"(10 - 4) / 2 = {result5} (subtraction first)");
             Console.WriteLine($"(5 > 3) && (2 < 4) = {result6} (explicit grouping)");
 
-            // Complex expression
             int a = 5, b = 3, c = 2;
-            int complex = a + b * c - a / b + c;
+            int complex = a + b * c - a / b + c; // 12
             Console.WriteLine($"Complex: {a} + {b} * {c} - {a} / {b} + {c} = {complex}");
             Console.WriteLine("Order: 3*2=6, 5/3=1, then 5+6-1+2=12");
         }
     }
 }
+
 ```
 
 ### Task 4: Main Program
 Create `Program.cs`:
 ```csharp
+using System;
 using Lab1_12;
 
 Console.WriteLine("=== Operators, Statements, and Expressions Demo ===\n");
@@ -372,30 +369,30 @@ AdvancedOperators.DemonstrateNullOperators();
 AdvancedOperators.DemonstrateTypeOperators();
 AdvancedOperators.DemonstrateOperatorPrecedence();
 
-// Demonstrate statements vs expressions
+// Statements vs Expressions
 Console.WriteLine("\n=== Statements vs Expressions ===\n");
 
-// Statements (perform actions, don't return values)
-int x = 10;                    // Assignment statement
-Console.WriteLine("Hello");   // Method call statement
-if (x > 5) x++;               // Conditional statement
+// Statements
+int x = 10;
+Console.WriteLine("Hello");
+if (x > 5) x++;
 
-// Expressions (evaluate to values)
-int sum = 5 + 3;              // Arithmetic expression
-bool isPositive = x > 0;      // Comparison expression
-string message = x > 10 ? "Large" : "Small"; // Conditional expression
+// Expressions
+int sum = 5 + 3;
+bool isPositive = x > 0;
+string message = x > 10 ? "Large" : "Small";
 
 Console.WriteLine($"Sum expression result: {sum}");
 Console.WriteLine($"Comparison expression result: {isPositive}");
 Console.WriteLine($"Conditional expression result: {message}");
 
-// Expression-bodied members (expressions used as method bodies)
-static int Square(int n) => n * n;  // Expression-bodied method
+// Expression-bodied local functions
+static int Square(int n) => n * n;
 static string GetStatus(int value) => value switch
 {
     > 0 => "Positive",
     < 0 => "Negative",
-    _ => "Zero"
+    _   => "Zero"
 };
 
 Console.WriteLine($"Square(4) = {Square(4)}");

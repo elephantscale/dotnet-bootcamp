@@ -27,6 +27,8 @@ Learn proper usage of the 'this' keyword.
 ### Task 1: Data Types Exploration
 Create `DataTypesDemo.cs`:
 ```csharp
+using System;
+
 namespace Lab1_11
 {
     public class DataTypesDemo
@@ -40,14 +42,14 @@ namespace Lab1_11
             Console.WriteLine("=== Value Types Demo ===\n");
 
             // Integer types
-            byte byteValue = 255;                    // 0 to 255
+            byte  byteValue  = 255;                  // 0 to 255
             sbyte sbyteValue = -128;                 // -128 to 127
             short shortValue = -32768;               // -32,768 to 32,767
             ushort ushortValue = 65535;              // 0 to 65,535
-            int intValue = -2147483648;              // -2,147,483,648 to 2,147,483,647
-            uint uintValue = 4294967295;             // 0 to 4,294,967,295
-            long longValue = -9223372036854775808;   // Very large range
-            ulong ulongValue = 18446744073709551615; // 0 to very large positive
+            int   intValue   = int.MinValue;         // use constant to avoid literal overflow
+            uint  uintValue  = 4294967295;           // 0 to 4,294,967,295
+            long  longValue  = long.MinValue;        // use constant to avoid literal overflow
+            ulong ulongValue = 18446744073709551615UL;
 
             Console.WriteLine($"byte: {byteValue} (size: {sizeof(byte)} bytes)");
             Console.WriteLine($"sbyte: {sbyteValue} (size: {sizeof(sbyte)} bytes)");
@@ -59,17 +61,17 @@ namespace Lab1_11
             Console.WriteLine($"ulong: {ulongValue} (size: {sizeof(ulong)} bytes)");
 
             // Floating-point types
-            float floatValue = 3.14159f;             // ~7 digits precision
-            double doubleValue = 3.141592653589793;  // ~15-17 digits precision
-            decimal decimalValue = 3.141592653589793238462643383279m; // ~28-29 digits precision
+            float   floatValue   = 3.14159f;             // ~7 digits precision
+            double  doubleValue  = 3.141592653589793;    // ~15-17 digits precision
+            decimal decimalValue = 3.141592653589793238462643383279m; // ~28-29 digits
 
             Console.WriteLine($"\nfloat: {floatValue} (size: {sizeof(float)} bytes)");
             Console.WriteLine($"double: {doubleValue} (size: {sizeof(double)} bytes)");
             Console.WriteLine($"decimal: {decimalValue} (size: {sizeof(decimal)} bytes)");
 
             // Other value types
-            bool boolValue = true;
-            char charValue = 'A';
+            bool     boolValue = true;
+            char     charValue = 'A';
             DateTime dateValue = DateTime.Now;
 
             Console.WriteLine($"\nbool: {boolValue} (size: {sizeof(bool)} bytes)");
@@ -77,10 +79,10 @@ namespace Lab1_11
             Console.WriteLine($"DateTime: {dateValue}");
 
             // Nullable value types
-            int? nullableInt = null;
+            int?    nullableInt    = null;
             double? nullableDouble = 3.14;
 
-            Console.WriteLine($"\nNullable int (null): {nullableInt ?? "NULL"}");
+            Console.WriteLine($"\nNullable int (null): {nullableInt?.ToString() ?? "NULL"}");
             Console.WriteLine($"Nullable double: {nullableDouble}");
             Console.WriteLine($"Has value: {nullableDouble.HasValue}");
             Console.WriteLine($"Value: {nullableDouble.Value}");
@@ -91,14 +93,14 @@ namespace Lab1_11
             Console.WriteLine("\n=== Reference Types Demo ===\n");
 
             // String (reference type but immutable)
-            string stringValue = "Hello, World!";
-            string nullString = null;
+            string  stringValue = "Hello, World!";
+            string? nullString  = null;
 
             Console.WriteLine($"String: '{stringValue}'");
             Console.WriteLine($"Null string: {nullString ?? "NULL"}");
 
             // Arrays (reference types)
-            int[] intArray = { 1, 2, 3, 4, 5 };
+            int[]    intArray    = { 1, 2, 3, 4, 5 };
             string[] stringArray = new string[3] { "A", "B", "C" };
 
             Console.WriteLine($"Int array: [{string.Join(", ", intArray)}]");
@@ -119,13 +121,13 @@ namespace Lab1_11
             Console.WriteLine("\n=== Variable Declarations Demo ===\n");
 
             // Explicit type declaration
-            int explicitInt = 42;
+            int    explicitInt    = 42;
             string explicitString = "Explicit";
 
             // Implicit type declaration (var keyword)
-            var implicitInt = 42;        // Compiler infers int
-            var implicitString = "Implicit"; // Compiler infers string
-            var implicitArray = new[] { 1, 2, 3 }; // Compiler infers int[]
+            var implicitInt   = 42;              // Compiler infers int
+            var implicitString = "Implicit";     // Compiler infers string
+            var implicitArray  = new[] { 1, 2, 3 }; // Compiler infers int[]
 
             Console.WriteLine($"Explicit int: {explicitInt} (type: {explicitInt.GetType().Name})");
             Console.WriteLine($"Implicit int: {implicitInt} (type: {implicitInt.GetType().Name})");
@@ -141,10 +143,10 @@ namespace Lab1_11
             Console.WriteLine($"Constant Company: {COMPANY_NAME}");
 
             // Default values
-            int defaultInt = default(int);           // 0
-            bool defaultBool = default(bool);        // false
-            string defaultString = default(string);  // null
-            DateTime defaultDate = default(DateTime); // 1/1/0001 12:00:00 AM
+            int      defaultInt    = default; // 0
+            bool     defaultBool   = default; // false
+            string?  defaultString = default; // null
+            DateTime defaultDate   = default; // 1/1/0001 12:00:00 AM
 
             Console.WriteLine($"Default int: {defaultInt}");
             Console.WriteLine($"Default bool: {defaultBool}");
@@ -167,12 +169,11 @@ namespace Lab1_11
                 int blockVariable = 20;
                 Console.WriteLine($"Inside block - Block variable: {blockVariable}");
                 Console.WriteLine($"Inside block - Method variable: {methodVariable}");
-                
-                // Shadowing (hiding outer variable)
-                int methodVariable = 30; // This shadows the outer methodVariable
-                Console.WriteLine($"Inside block - Shadowed method variable: {methodVariable}");
+
+                // No illegal shadowing: use a different name
+                int innerMethodVariable = 30;
+                Console.WriteLine($"Inside block - Inner method variable: {innerMethodVariable}");
             }
-            // blockVariable is not accessible here
             Console.WriteLine($"Outside block - Method variable: {methodVariable}");
 
             // Loop scope
@@ -181,7 +182,6 @@ namespace Lab1_11
                 int loopVariable = i * 10;
                 Console.WriteLine($"Loop iteration {i}: loop variable = {loopVariable}");
             }
-            // i and loopVariable are not accessible here
 
             // Conditional scope
             if (methodVariable > 5)
@@ -189,7 +189,6 @@ namespace Lab1_11
                 int conditionalVariable = 40;
                 Console.WriteLine($"Inside if - Conditional variable: {conditionalVariable}");
             }
-            // conditionalVariable is not accessible here
         }
 
         public void DemonstrateThisKeyword(int classField)
@@ -200,10 +199,8 @@ namespace Lab1_11
             Console.WriteLine($"Parameter classField: {classField}");
             Console.WriteLine($"Class field (this.classField): {this.classField}");
 
-            // Using 'this' to call other constructors or methods
+            // Using 'this' to call other methods
             this.PrintInstanceInfo();
-
-            // 'this' is optional when no naming conflict
             PrintInstanceInfo(); // Same as this.PrintInstanceInfo()
         }
 
@@ -216,7 +213,6 @@ namespace Lab1_11
         public static void StaticMethodDemo()
         {
             Console.WriteLine($"Static method. Static field value: {staticField}");
-            // Console.WriteLine($"Cannot access: {this.classField}"); // Compilation error
         }
     }
 
@@ -232,15 +228,8 @@ namespace Lab1_11
             Y = y;
         }
 
-        public double DistanceFromOrigin()
-        {
-            return Math.Sqrt(X * X + Y * Y);
-        }
-
-        public override string ToString()
-        {
-            return $"({X}, {Y})";
-        }
+        public double DistanceFromOrigin() => Math.Sqrt(X * X + Y * Y);
+        public override string ToString() => $"({X}, {Y})";
     }
 
     // Demonstrate class (reference type)
@@ -305,7 +294,7 @@ Circle circle1 = new Circle(5);
 Circle circle2 = circle1; // Copy of reference
 circle2.Radius = 10;
 
-Console.WriteLine("Circle1:"); 
+Console.WriteLine("Circle1:");
 circle1.PrintInfo(); // Radius: 10 - changed because both variables reference the same object
 Console.WriteLine("Circle2:");
 circle2.PrintInfo(); // Radius: 10 - same object
@@ -314,8 +303,8 @@ circle2.PrintInfo(); // Radius: 10 - same object
 Console.WriteLine("\n=== Boxing and Unboxing Demo ===");
 
 int valueType = 42;
-object boxedValue = valueType;    // Boxing: value type -> reference type
-int unboxedValue = (int)boxedValue; // Unboxing: reference type -> value type
+object boxedValue = valueType;        // Boxing: value type -> reference type
+int unboxedValue = (int)boxedValue;   // Unboxing: reference type -> value type
 
 Console.WriteLine($"Original value: {valueType}");
 Console.WriteLine($"Boxed value: {boxedValue}");
@@ -323,7 +312,7 @@ Console.WriteLine($"Unboxed value: {unboxedValue}");
 Console.WriteLine($"Are they equal: {valueType == unboxedValue}");
 
 // Type checking
-Console.WriteLine($"valueType is int: {valueType is int}");
+Console.WriteLine($"valueType runtime type: {valueType.GetType().Name}");
 Console.WriteLine($"boxedValue is int: {boxedValue is int}");
 Console.WriteLine($"boxedValue is object: {boxedValue is object}");
 
