@@ -64,16 +64,11 @@ namespace Lab2_1
             // String interpolation vs concatenation
             string name = "Alice";
             int age = 30;
-            
-            // String interpolation (preferred)
+
             string interpolated = $"Name: {name}, Age: {age}";
-            
-            // String concatenation
             string concatenated = "Name: " + name + ", Age: " + age;
-            
-            // String.Format
             string formatted = string.Format("Name: {0}, Age: {1}", name, age);
-            
+
             Console.WriteLine($"Interpolated: {interpolated}");
             Console.WriteLine($"Concatenated: {concatenated}");
             Console.WriteLine($"Formatted: {formatted}");
@@ -84,7 +79,7 @@ namespace Lab2_1
             sb.AppendLine($"- Current time: {DateTime.Now}");
             sb.AppendLine($"- Random number: {new Random().Next(1, 100)}");
             sb.Append("- End of string");
-            
+
             Console.WriteLine(sb.ToString());
         }
 
@@ -100,8 +95,7 @@ namespace Lab2_1
             Console.WriteLine($"str1 == str3: {str1 == str3}");
             Console.WriteLine($"str1.Equals(str2): {str1.Equals(str2)}");
             Console.WriteLine($"str1.Equals(str2, StringComparison.OrdinalIgnoreCase): {str1.Equals(str2, StringComparison.OrdinalIgnoreCase)}");
-            
-            // String comparison methods
+
             Console.WriteLine($"Compare(str1, str2): {string.Compare(str1, str2)}");
             Console.WriteLine($"Compare(str1, str2, ignoreCase): {string.Compare(str1, str2, true)}");
         }
@@ -110,14 +104,14 @@ namespace Lab2_1
         {
             Console.WriteLine("\n=== String Validation Demo ===");
 
-            string[] testStrings = { "", "   ", null, "Valid String", "123", "user@email.com" };
+            string[] testStrings = { "", "   ", null!, "Valid String", "123", "user@email.com" };
 
             foreach (var test in testStrings)
             {
                 Console.WriteLine($"Testing: '{test ?? "null"}'");
                 Console.WriteLine($"  IsNullOrEmpty: {string.IsNullOrEmpty(test)}");
                 Console.WriteLine($"  IsNullOrWhiteSpace: {string.IsNullOrWhiteSpace(test)}");
-                
+
                 if (!string.IsNullOrEmpty(test))
                 {
                     Console.WriteLine($"  IsNumeric: {IsNumeric(test)}");
@@ -127,15 +121,9 @@ namespace Lab2_1
             }
         }
 
-        private static bool IsNumeric(string input)
-        {
-            return double.TryParse(input, out _);
-        }
+        private static bool IsNumeric(string input) => double.TryParse(input, out _);
 
-        private static bool IsValidEmail(string email)
-        {
-            return email.Contains("@") && email.Contains(".");
-        }
+        private static bool IsValidEmail(string email) => email.Contains("@") && email.Contains(".");
     }
 }
 ```
@@ -151,7 +139,6 @@ namespace Lab2_1
         {
             Console.WriteLine("=== DateTime Basics Demo ===\n");
 
-            // Current date and time
             DateTime now = DateTime.Now;
             DateTime utcNow = DateTime.UtcNow;
             DateTime today = DateTime.Today;
@@ -160,14 +147,12 @@ namespace Lab2_1
             Console.WriteLine($"Current UTC Time: {utcNow}");
             Console.WriteLine($"Today (Date only): {today}");
 
-            // Creating specific dates
             DateTime specificDate = new DateTime(2024, 12, 25, 10, 30, 0);
             DateTime parsedDate = DateTime.Parse("2024-06-15 14:30:00");
-            
+
             Console.WriteLine($"Christmas 2024: {specificDate}");
             Console.WriteLine($"Parsed Date: {parsedDate}");
 
-            // Date arithmetic
             DateTime futureDate = now.AddDays(30);
             DateTime pastDate = now.AddMonths(-6);
             TimeSpan difference = futureDate - now;
@@ -183,7 +168,6 @@ namespace Lab2_1
 
             DateTime date = new DateTime(2024, 3, 15, 14, 30, 45);
 
-            // Standard format strings
             Console.WriteLine($"Short Date: {date:d}");
             Console.WriteLine($"Long Date: {date:D}");
             Console.WriteLine($"Short Time: {date:t}");
@@ -191,7 +175,6 @@ namespace Lab2_1
             Console.WriteLine($"Full DateTime: {date:F}");
             Console.WriteLine($"ISO 8601: {date:yyyy-MM-ddTHH:mm:ss}");
 
-            // Custom format strings
             Console.WriteLine($"Custom 1: {date:MMM dd, yyyy}");
             Console.WriteLine($"Custom 2: {date:dddd, MMMM dd}");
             Console.WriteLine($"Custom 3: {date:HH:mm:ss}");
@@ -202,8 +185,7 @@ namespace Lab2_1
         {
             Console.WriteLine("\n=== TimeSpan Demo ===");
 
-            // Creating TimeSpan objects
-            TimeSpan span1 = new TimeSpan(2, 30, 45); // 2 hours, 30 minutes, 45 seconds
+            TimeSpan span1 = new TimeSpan(2, 30, 45);
             TimeSpan span2 = TimeSpan.FromDays(7);
             TimeSpan span3 = TimeSpan.FromMinutes(90);
 
@@ -211,11 +193,9 @@ namespace Lab2_1
             Console.WriteLine($"Span 2: {span2}");
             Console.WriteLine($"Span 3: {span3}");
 
-            // TimeSpan arithmetic
             TimeSpan total = span1 + span3;
             Console.WriteLine($"Span1 + Span3: {total}");
 
-            // TimeSpan properties
             Console.WriteLine($"Total hours in span3: {span3.TotalHours}");
             Console.WriteLine($"Days in span2: {span2.Days}");
         }
@@ -242,11 +222,10 @@ namespace Lab2_1
         {
             DateTime today = DateTime.Today;
             int age = today.Year - birthDate.Year;
-            
-            // Adjust if birthday hasn't occurred this year
+
             if (birthDate.Date > today.AddYears(-age))
                 age--;
-                
+
             return age;
         }
     }
@@ -277,7 +256,6 @@ namespace Lab2_1
                 Console.WriteLine();
             }
 
-            // Math constants and functions
             Console.WriteLine($"Pi: {Math.PI}");
             Console.WriteLine($"E: {Math.E}");
             Console.WriteLine($"Sin(π/2): {Math.Sin(Math.PI / 2)}");
@@ -286,7 +264,6 @@ namespace Lab2_1
             Console.WriteLine($"Log10(100): {Math.Log10(100)}");
             Console.WriteLine($"2^8: {Math.Pow(2, 8)}");
 
-            // Min/Max operations
             Console.WriteLine($"Max(10, 20): {Math.Max(10, 20)}");
             Console.WriteLine($"Min(-5, 3): {Math.Min(-5, 3)}");
         }
@@ -296,7 +273,7 @@ namespace Lab2_1
             Console.WriteLine("\n=== Random Class Demo ===");
 
             Random random = new Random();
-            
+
             Console.WriteLine("Random integers (0-99):");
             for (int i = 0; i < 5; i++)
             {
@@ -315,12 +292,10 @@ namespace Lab2_1
                 Console.WriteLine($"  {random.NextDouble():F4}");
             }
 
-            // Random bytes
             byte[] buffer = new byte[10];
             random.NextBytes(buffer);
             Console.WriteLine($"\nRandom bytes: {string.Join(", ", buffer)}");
 
-            // Seeded random for reproducible results
             Random seededRandom = new Random(12345);
             Console.WriteLine("\nSeeded random (same seed = same sequence):");
             for (int i = 0; i < 3; i++)
@@ -333,7 +308,6 @@ namespace Lab2_1
         {
             Console.WriteLine("\n=== Guid Class Demo ===");
 
-            // Generate new GUIDs
             Guid guid1 = Guid.NewGuid();
             Guid guid2 = Guid.NewGuid();
             Guid emptyGuid = Guid.Empty;
@@ -342,14 +316,12 @@ namespace Lab2_1
             Console.WriteLine($"GUID 2: {guid2}");
             Console.WriteLine($"Empty GUID: {emptyGuid}");
 
-            // GUID formats
             Console.WriteLine($"\nGUID Formats:");
             Console.WriteLine($"  Default: {guid1}");
             Console.WriteLine($"  No hyphens: {guid1:N}");
             Console.WriteLine($"  With braces: {guid1:B}");
             Console.WriteLine($"  With parentheses: {guid1:P}");
 
-            // Parse GUID from string
             string guidString = guid1.ToString();
             Guid parsedGuid = Guid.Parse(guidString);
             Console.WriteLine($"\nParsed GUID matches original: {parsedGuid == guid1}");
@@ -359,7 +331,6 @@ namespace Lab2_1
         {
             Console.WriteLine("\n=== Convert Class Demo ===");
 
-            // Type conversions
             string numberString = "123";
             string doubleString = "45.67";
             string boolString = "true";
@@ -376,14 +347,12 @@ namespace Lab2_1
                 Console.WriteLine($"String to bool: '{boolString}' -> {boolValue}");
                 Console.WriteLine($"String to DateTime: '2024-03-15' -> {dateValue:yyyy-MM-dd}");
 
-                // Base conversions
                 int number = 255;
                 Console.WriteLine($"\nBase conversions for {number}:");
                 Console.WriteLine($"  Binary: {Convert.ToString(number, 2)}");
                 Console.WriteLine($"  Octal: {Convert.ToString(number, 8)}");
                 Console.WriteLine($"  Hexadecimal: {Convert.ToString(number, 16)}");
 
-                // Convert back from hex
                 string hexString = "FF";
                 int fromHex = Convert.ToInt32(hexString, 16);
                 Console.WriteLine($"  Hex '{hexString}' to int: {fromHex}");
