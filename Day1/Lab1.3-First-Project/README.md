@@ -55,40 +55,39 @@ namespace MyFirstApp.Console.Models
     public class Person
     {
         public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
+        public string LastName  { get; set; } = string.Empty;
         public int Age { get; set; }
 
-        public string GetFullName()
-        {
-            return $"{FirstName} {LastName}";
-        }
+        public string GetFullName() => $"{FirstName} {LastName}";
 
         public void DisplayInfo()
         {
-            Console.WriteLine($"Name: {GetFullName()}, Age: {Age}");
+            System.Console.WriteLine($"Name: {GetFullName()}, Age: {Age}");
         }
+
+        public override string ToString() => $"{GetFullName()} ({Age})";
     }
 }
 ```
 
 Create `Services/PersonService.cs`:
 ```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using MyFirstApp.Console.Models;
 
 namespace MyFirstApp.Console.Services
 {
     public class PersonService
     {
-        private List<Person> _people = new List<Person>();
+        private readonly List<Person> _people = new();
 
-        public void AddPerson(Person person)
-        {
-            _people.Add(person);
-        }
+        public void AddPerson(Person person) => _people.Add(person);
 
         public void DisplayAllPeople()
         {
-            Console.WriteLine("=== People List ===");
+            System.Console.WriteLine("=== People List ===");
             foreach (var person in _people)
             {
                 person.DisplayInfo();
@@ -97,9 +96,9 @@ namespace MyFirstApp.Console.Services
 
         public Person? FindPersonByName(string firstName, string lastName)
         {
-            return _people.FirstOrDefault(p => 
+            return _people.FirstOrDefault(p =>
                 p.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
-                p.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+                p.LastName.Equals(lastName,  StringComparison.OrdinalIgnoreCase));
         }
     }
 }
@@ -110,59 +109,42 @@ Update `Program.cs`:
 using MyFirstApp.Console.Models;
 using MyFirstApp.Console.Services;
 
-Console.WriteLine("Welcome to My First .NET Application!");
+System.Console.WriteLine("Welcome to My First .NET Application!");
 
 var personService = new PersonService();
 
 // Add some sample people
-personService.AddPerson(new Person 
-{ 
-    FirstName = "John", 
-    LastName = "Doe", 
-    Age = 30 
-});
-
-personService.AddPerson(new Person 
-{ 
-    FirstName = "Jane", 
-    LastName = "Smith", 
-    Age = 25 
-});
-
-personService.AddPerson(new Person 
-{ 
-    FirstName = "Bob", 
-    LastName = "Johnson", 
-    Age = 35 
-});
+personService.AddPerson(new Person { FirstName = "John", LastName = "Doe",     Age = 30 });
+personService.AddPerson(new Person { FirstName = "Jane", LastName = "Smith",   Age = 25 });
+personService.AddPerson(new Person { FirstName = "Bob",  LastName = "Johnson", Age = 35 });
 
 // Display all people
 personService.DisplayAllPeople();
 
 // Interactive search
-Console.WriteLine("\n=== Search for a Person ===");
-Console.Write("Enter first name: ");
-string? firstName = Console.ReadLine();
+System.Console.WriteLine("\n=== Search for a Person ===");
+System.Console.Write("Enter first name: ");
+string? firstName = System.Console.ReadLine();
 
-Console.Write("Enter last name: ");
-string? lastName = Console.ReadLine();
+System.Console.Write("Enter last name: ");
+string? lastName = System.Console.ReadLine();
 
 if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
 {
     var foundPerson = personService.FindPersonByName(firstName, lastName);
     if (foundPerson != null)
     {
-        Console.WriteLine("\nPerson found:");
+        System.Console.WriteLine("\nPerson found:");
         foundPerson.DisplayInfo();
     }
     else
     {
-        Console.WriteLine("Person not found.");
+        System.Console.WriteLine("Person not found.");
     }
 }
 
-Console.WriteLine("\nPress any key to exit...");
-Console.ReadKey();
+System.Console.WriteLine("\nPress any key to exit...");
+System.Console.ReadKey();
 ```
 
 ### Task 4: Build and Run
