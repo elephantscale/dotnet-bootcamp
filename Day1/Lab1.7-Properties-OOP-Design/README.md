@@ -25,6 +25,8 @@ Apply encapsulation and abstraction in practical examples.
 ### Task 1: Property Variations
 Create `Models/Employee.cs`:
 ```csharp
+using System;
+
 namespace Lab1_7.Models
 {
     public class Employee
@@ -66,7 +68,7 @@ namespace Lab1_7.Models
             {
                 if (value < 0)
                     throw new ArgumentException("Salary cannot be negative");
-                if (value > 1000000)
+                if (value > 1_000_000)
                     throw new ArgumentException("Salary exceeds maximum allowed");
                 _salary = value;
             }
@@ -85,31 +87,22 @@ namespace Lab1_7.Models
         public string Email { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
 
-        // Computed properties (no backing field)
+        // Computed properties
         public string FullName => $"{FirstName} {LastName}";
-        
         public int YearsOfService => DateTime.Now.Year - HireDate.Year;
-        
         public decimal AnnualSalary => Salary * 12;
-        
         public string DisplayName => $"{FullName} ({EmployeeId})";
 
-        // Property with complex logic
-        public string SalaryGrade
-        {
-            get
+        public string SalaryGrade =>
+            AnnualSalary switch
             {
-                return AnnualSalary switch
-                {
-                    < 30000 => "Entry Level",
-                    < 50000 => "Junior",
-                    < 75000 => "Mid Level",
-                    < 100000 => "Senior",
-                    < 150000 => "Lead",
-                    _ => "Executive"
-                };
-            }
-        }
+                < 30000  => "Entry Level",
+                < 50000  => "Junior",
+                < 75000  => "Mid Level",
+                < 100000 => "Senior",
+                < 150000 => "Lead",
+                _        => "Executive"
+            };
 
         // Constructor
         public Employee(int employeeId, string firstName, string lastName, decimal monthlySalary)
@@ -121,28 +114,27 @@ namespace Lab1_7.Models
             HireDate = DateTime.Now;
         }
 
-        // Method using properties
+        // Methods that use properties
         public void GiveRaise(decimal percentage)
         {
             if (percentage < 0)
                 throw new ArgumentException("Raise percentage cannot be negative");
-            
+
             var oldSalary = Salary;
-            Salary += Salary * (percentage / 100);
-            
+            Salary += Salary * (percentage / 100m);
+
             Console.WriteLine($"{FullName} received a {percentage}% raise");
-            Console.WriteLine($"Salary increased from ${oldSalary:C} to ${Salary:C} per month");
+            Console.WriteLine($"Salary increased from {oldSalary:C} to {Salary:C} per month");
         }
 
         public void UpdateDepartment(string newDepartment)
         {
             if (string.IsNullOrWhiteSpace(newDepartment))
                 throw new ArgumentException("Department cannot be empty");
-            
-            var oldDepartment = Department;
+
+            var old = Department;
             Department = newDepartment;
-            
-            Console.WriteLine($"{FullName} transferred from {oldDepartment} to {Department}");
+            Console.WriteLine($"{FullName} transferred from {old} to {Department}");
         }
 
         public void PrintEmployeeInfo()
@@ -154,8 +146,8 @@ namespace Lab1_7.Models
             Console.WriteLine($"Department: {Department}");
             Console.WriteLine($"Hire Date: {HireDate:yyyy-MM-dd}");
             Console.WriteLine($"Years of Service: {YearsOfService}");
-            Console.WriteLine($"Monthly Salary: ${Salary:C}");
-            Console.WriteLine($"Annual Salary: ${AnnualSalary:C}");
+            Console.WriteLine($"Monthly Salary: {Salary:C}");
+            Console.WriteLine($"Annual Salary: {AnnualSalary:C}");
             Console.WriteLine($"Salary Grade: {SalaryGrade}");
             Console.WriteLine($"Status: {(IsActive ? "Active" : "Inactive")}");
             Console.WriteLine("============================\n");
@@ -167,6 +159,10 @@ namespace Lab1_7.Models
 ### Task 2: Advanced Property Patterns
 Create `Models/BankAccount.cs`:
 ```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Lab1_7.Models
 {
     public class BankAccount
@@ -178,10 +174,10 @@ namespace Lab1_7.Models
         public string AccountNumber { get; }
         public string AccountHolder { get; }
         public DateTime CreatedDate { get; }
-        
+
         // Property with private setter
-        public decimal Balance 
-        { 
+        public decimal Balance
+        {
             get => _balance;
             private set => _balance = value;
         }
@@ -217,7 +213,7 @@ namespace Lab1_7.Models
             }
         }
 
-        public string AccountSummary => 
+        public string AccountSummary =>
             $"{AccountNumber} - {AccountHolder} - {Balance:C} ({AccountStatus})";
 
         // Constructor
@@ -234,7 +230,7 @@ namespace Lab1_7.Models
             AccountHolder = accountHolder;
             CreatedDate = DateTime.Now;
             _transactions = new List<Transaction>();
-            
+
             if (initialBalance > 0)
             {
                 Balance = initialBalance;
@@ -259,8 +255,8 @@ namespace Lab1_7.Models
 
             Balance += amount;
             _transactions.Add(new Transaction(TransactionType.Deposit, amount, description));
-            
-            Console.WriteLine($"Deposited ${amount:C}. New balance: ${Balance:C}");
+
+            Console.WriteLine($"Deposited {amount:C}. New balance: {Balance:C}");
             return true;
         }
 
@@ -280,14 +276,14 @@ namespace Lab1_7.Models
 
             if (amount > Balance)
             {
-                Console.WriteLine($"Insufficient funds. Available: ${Balance:C}");
+                Console.WriteLine($"Insufficient funds. Available: {Balance:C}");
                 return false;
             }
 
             Balance -= amount;
             _transactions.Add(new Transaction(TransactionType.Withdrawal, amount, description));
-            
-            Console.WriteLine($"Withdrew ${amount:C}. New balance: ${Balance:C}");
+
+            Console.WriteLine($"Withdrew {amount:C}. New balance: {Balance:C}");
             return true;
         }
 
@@ -322,7 +318,7 @@ namespace Lab1_7.Models
         public override string ToString()
         {
             var sign = Type == TransactionType.Deposit ? "+" : "-";
-            return $"{Timestamp:yyyy-MM-dd HH:mm} | {Type} | {sign}${Amount:C} | {Description}";
+            return $"{Timestamp:yyyy-MM-dd HH:mm} | {Type} | {sign}{Amount:C} | {Description}";
         }
     }
 }
@@ -331,6 +327,10 @@ namespace Lab1_7.Models
 ### Task 3: Property-Based Design Pattern
 Create `Models/Configuration.cs`:
 ```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Lab1_7.Models
 {
     public class ApplicationConfiguration
@@ -341,13 +341,13 @@ namespace Lab1_7.Models
         public object this[string key]
         {
             get => _settings.TryGetValue(key, out var value) ? value : null!;
-            set => _settings[key] = value;
+            set => _settings[key] = value!;
         }
 
         // Strongly-typed properties for common settings
         public string ApplicationName
         {
-            get => GetSetting<string>("ApplicationName") ?? "Default App";
+            get => GetSetting<string>("ApplicationName") ?? "My .NET Application";
             set => SetSetting("ApplicationName", value);
         }
 
@@ -394,11 +394,9 @@ namespace Lab1_7.Models
 
         private T GetSetting<T>(string key)
         {
-            if (_settings.TryGetValue(key, out var value) && value is T typedValue)
-            {
-                return typedValue;
-            }
-            return default(T)!;
+            if (_settings.TryGetValue(key, out var value) && value is T typed)
+                return typed;
+            return default!;
         }
 
         private void SetSetting(string key, object value)
@@ -467,9 +465,9 @@ account.Withdraw(200, "ATM withdrawal");
 account.Withdraw(50, "Online purchase");
 
 Console.WriteLine($"\nAccount after transactions:");
-Console.WriteLine($"Balance: ${account.Balance:C}");
-Console.WriteLine($"Total Deposits: ${account.TotalDeposits:C}");
-Console.WriteLine($"Total Withdrawals: ${account.TotalWithdrawals:C}");
+Console.WriteLine($"Balance: {account.Balance:C}");
+Console.WriteLine($"Total Deposits: {account.TotalDeposits:C}");
+Console.WriteLine($"Total Withdrawals: {account.TotalWithdrawals:C}");
 Console.WriteLine($"Transaction Count: {account.TransactionCount}");
 
 if (account.LastTransaction != null)
